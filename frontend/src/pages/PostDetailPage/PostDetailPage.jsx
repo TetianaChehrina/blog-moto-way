@@ -5,6 +5,7 @@ import { deletePost, getPostById } from "../../redux/posts/operations.js";
 import { selectCurrentPost } from "../../redux/posts/selectors.js";
 import { Button, Typography, Box, Avatar, Divider } from "@mui/material";
 import EditPostModal from "../../components/EditPostModal/EditPostModal.jsx";
+import { BASE_URL } from "../../config.js";
 
 const PostDetailsPage = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const PostDetailsPage = () => {
       </Typography>
       <Box
         component="img"
-        src={`http://localhost:3000${post.imageUrl}`}
+        src={`${BASE_URL}${post.imageUrl}`}
         alt={post.title}
         sx={{
           width: "100%",

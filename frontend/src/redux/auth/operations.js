@@ -1,7 +1,8 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL } from "../../config.js";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = BASE_URL;
 
 const setAuthHeader = (token) => {
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;

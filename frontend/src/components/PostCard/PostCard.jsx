@@ -11,6 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config";
 
 const PostCard = ({ post, onDelete, onEdit }) => {
   const { _id, title, category, date } = post;
@@ -35,7 +36,7 @@ const PostCard = ({ post, onDelete, onEdit }) => {
           objectFit: "cover",
           margin: "0 auto",
         }}
-        image={`http://localhost:3000${post.imageUrl}`}
+        image={`${BASE_URL}${post.imageUrl}`}
         alt={post.title}
       />
 
