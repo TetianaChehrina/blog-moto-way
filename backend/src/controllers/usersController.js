@@ -1,59 +1,103 @@
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
 import {
+  clearUserToken,
   createUser,
   findUserByEmail,
-  resetUserToken,
-  updateUserWithToken,
+  updateUserToken,
 } from '../services/usersService.js';
+import { env } from '../utils/env.js';
+import bcrypt from 'bcryptjs';
+import { User } from '../db/models/User.js';
 
 export const registerUserController = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
-    const user = await findUserByEmail(email);
-    if (user) throw createHttpError(409, 'Email in use');
-
-    const newUser = await createUser({ username, email, password });
-
-    res.json({
-      token: newUser.token,
-      user: {
-        name: newUser.name,
-        email: newUser.email,
-      },
-    });
-  } catch (error) {
-    console.error('Register user error:', error);
-    res.status(error.status || 500).json({ message: error.message });
-  }
-};
-
-export const loginUserController = async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await findUserByEmail(email);
-
-  if (!user) {
-    throw createHttpError(401, 'User not found');
+  const existingUser = await findUserByEmail(email);
+  if (existingUser) {
+    throw createHttpError(409, 'Email already in use');
   }
 
-  const isCorrectPassword = await bcrypt.compare(password, user.password);
-  if (!isCorrectPassword) {
-    throw createHttpError(401, 'Invalid credentials');
+  const isFirstUser = (await User.countDocuments()) === 0;
+  const assignedRole = isFirstUser ? 'admin' : role || 'user';
+
+  if (role === 'admin' && !isFirstUser) {
+    throw createHttpError(403, 'Admin user already exists');
   }
 
-  const updatedUser = await updateUserWithToken(user._id);
+  const newUser = await createUser({
+    username,
+    email,
+    password,
+    role: assignedRole,
+  });
 
-  res.json({
-    token: updatedUser.token,
+  res.status(201).json({
+    message: 'User created successfully',
     user: {
-      username: updatedUser.username,
-      email: updatedUser.email,
+      id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role,
     },
   });
 };
 
-export const logoutUser = async (req, res) => {
-  await resetUserToken(req.user._id);
-  res.status(204).end();
+export const loginUserController = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await findUserByEmail(email);
+    if (!user) {
+      throw createHttpError(401, 'User not found');
+    }
+
+    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    if (!isCorrectPassword) {
+      throw createHttpError(401, 'Invalid credentials');
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+      env('JWT_SECRET'),
+      { expiresIn: '1h' },
+    );
+
+    await updateUserToken(user._id, token);
+
+    res.json({
+      token,
+      user: {
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logoutUser = async (req, res, next) => {
+  try {
+    await clearUserToken(req.user.id);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const refreshUser = (req, res) => {
+  const { username, email, role, id } = req.user;
+  res.json({
+    username,
+    email,
+    role,
+    id,
+  });
 };

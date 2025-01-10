@@ -7,11 +7,11 @@ const postSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['travel', 'fashion', 'food', 'technology', 'lifestyle'],
+    enum: ['Travel', 'Technology', 'Lifestyle'],
   },
-  isFavourite: { type: Boolean, default: false },
+  imageUrl: { type: String },
   date: { type: Date, default: Date.now },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 });
 
-export const Post = mongoose.model('post', postSchema);
+export const Post = mongoose.model('Post', postSchema);

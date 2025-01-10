@@ -1,28 +1,21 @@
-import createHttpError from 'http-errors';
-import { findUserById } from '../services/usersService.js';
+import jwt from 'jsonwebtoken';
+
+import { User } from '../db/models/User.js';
 
 export const checkToken = async (req, res, next) => {
-  const auth = req.get('Authorization');
-  if (!auth) {
-    next(createHttpError(401, 'Unauthorization'));
-    return;
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    req.user = null;
+    return next();
   }
 
-  const [bearer, token] = auth.split(' ', 2);
-  if (bearer !== 'Bearer' || !token) {
-    return next(createHttpError(401, 'Auth header should be of type Bearer'));
-  }
-
+  const token = authHeader.split(' ')[1];
   try {
-    const { id } = jwt.verify(token, env('JWT_SECRET'));
-    const user = await findUserById(id);
-    if (!user || !user.token || user.token !== token) {
-      next(createHttpError(401, 'Unauthorization'));
-      return;
-    }
-    req.user = user;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id).select('-password');
     next();
   } catch (error) {
-    next(createHttpError(401, 'Invalid token'));
+    res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 };

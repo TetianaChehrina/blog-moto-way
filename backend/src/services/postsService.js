@@ -7,10 +7,6 @@ export const getPosts = async (filters, perPage, page) => {
     query.category = filters.category;
   }
 
-  if (filters.isFavourite !== undefined) {
-    query.isFavourite = filters.isFafourite;
-  }
-
   const totalItems = await Post.countDocuments(query);
 
   const posts = await Post.find(query)

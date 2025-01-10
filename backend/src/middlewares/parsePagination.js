@@ -14,5 +14,3 @@ export const parsePaginationParams = (pagination) => {
     perPage: parsedPerPage,
   };
 };
-
-export default parsePaginationParams;

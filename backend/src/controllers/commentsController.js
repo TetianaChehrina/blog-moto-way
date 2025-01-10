@@ -27,8 +27,8 @@ export const deleteCommentByController = async (req, res) => {
 export const updateCommentByController = async (req, res) => {
   const { commentId } = req.params;
   const { data } = req.body;
-  const updateComment = await updateComment(commentId, data);
-  res.json(updateComment);
+  const updatedComment = await updateComment(commentId, data);
+  res.json(updatedComment);
 };
 
 export const getCommentsController = async (req, res) => {
