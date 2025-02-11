@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshUser } from "./redux/auth/operations.js";
 import { selectIsRefreshing } from "./redux/auth/selectors.js";
+import Loader from "./components/Loader/Loader.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage.jsx"));
 const RegisterPage = lazy(() =>
@@ -24,11 +25,11 @@ const App = () => {
   }, [dispatch]);
 
   if (isRefreshing) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
-    <Suspense fallback={<b>Loading...</b>}>
+    <Suspense fallback={<Loader />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />

@@ -43,17 +43,24 @@ const ContactPage = () => {
             }}
           >
             <Typography>
-              <strong>Address:</strong> 198 West 19th Street, Suite 721 Kyiv
-              60016
+              <strong>Address:</strong> 19 Velyka Vasylkivska Street, Kyiv,
+              Ukraine, 01004
             </Typography>
             <Typography>
-              <strong>Phone:</strong> +1215 2355 98
+              <strong>Phone:</strong> +380 44 536 05 50
             </Typography>
             <Typography>
-              <strong>Email:</strong> info@yoursite.com
+              <strong>Email:</strong> moto-way@gmail.com
             </Typography>
             <Typography>
-              <strong>Website:</strong> yoursite.com
+              <strong>Website:</strong>
+              <a
+                href="https://blog-moto-way.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                https://blog-moto-way.vercel.app/
+              </a>
             </Typography>
           </Box>
 

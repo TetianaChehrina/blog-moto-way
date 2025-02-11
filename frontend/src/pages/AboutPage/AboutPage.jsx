@@ -28,10 +28,23 @@ const AboutPage = () => {
         <Typography variant="h3" sx={{ fontWeight: "bold", mb: 2 }}>
           I'm <span style={{ color: "#007BFF" }}>Alison Ryder</span>
         </Typography>
-        <Typography variant="h5" sx={{ mb: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
           a Ukrainian Blogger & Adventure Seeker
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{
+            fontSize: {
+              xs: "18px",
+              sm: "20px",
+              md: "22px",
+              fontWeight: 500,
+            },
+            lineHeight: 1.8,
+            fontWeight: 500,
+          }}
+        >
           Life is a road, and I am here to ride it. Born to explore the world on
           two wheels, I have traded comfort for freedom and found my true self
           on the highways and hidden trails. <br /> Through my blog, I share
