@@ -51,7 +51,7 @@
 
 Clone the repository:
 
-git clone https://github.com/your-repo/blog-moto-way.git
+git clone https://github.com/TetianaChehrina/blog-moto-way.git
 cd blog-moto-way/backend
 
 Install dependencies:
